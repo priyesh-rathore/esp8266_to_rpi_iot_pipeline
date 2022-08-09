@@ -1,0 +1,688 @@
+[
+    {
+        "id": "fcabaea46c0a3fd7",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "da9564f6be78de60",
+        "type": "mqtt in",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/distance",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b8293848e4bb5428",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "791d20eb7e717f96",
+                "866cbaa4fe78ae25",
+                "3c3318c7ddee052e"
+            ]
+        ]
+    },
+    {
+        "id": "791d20eb7e717f96",
+        "type": "ui_gauge",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "group": "f29193e8ce275940",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Distance",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 420,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "8100fe1454e7f2ba",
+        "type": "ui_switch",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "label": "LED",
+        "tooltip": "",
+        "group": "330a059e1c1d99c8",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "OFF",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "ON",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 130,
+        "y": 520,
+        "wires": [
+            [
+                "904888081a41c14e"
+            ]
+        ]
+    },
+    {
+        "id": "904888081a41c14e",
+        "type": "mqtt out",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/esp1/led",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b8293848e4bb5428",
+        "x": 390,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "d8b5364f54fe9f7d",
+        "type": "mqtt in",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/led",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b8293848e4bb5428",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 280,
+        "wires": [
+            [
+                "9bbc5bbf774c3b1c"
+            ]
+        ]
+    },
+    {
+        "id": "9bbc5bbf774c3b1c",
+        "type": "function",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "func": "var ldr = parseInt(msg.payload);\nvar hook = flow.get(\"hook\");\nvar ldr_count = flow.get(\"ldr_count\");\n\nif(ldr > 4 && hook==0){\n    flow.set(\"hook\", 1);\n    ldr_count += 1;\n    flow.set(\"ldr_count\", ldr_count);\n}\n\nif(ldr < 4){\n    flow.set(\"hook\", 0);\n}\n\nmsg.payload = flow.get(\"ldr_count\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\n\nflow.set(\"hook\", 0);\nflow.set(\"ldr_count\", 0);\n\n",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 280,
+        "wires": [
+            [
+                "afcbfddcff2c1535"
+            ]
+        ]
+    },
+    {
+        "id": "afcbfddcff2c1535",
+        "type": "ui_text",
+        "z": "fcabaea46c0a3fd7",
+        "group": "138f9ea7c15d11a4",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "LDR Count",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 610,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "866cbaa4fe78ae25",
+        "type": "change",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "distance",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 440,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8107088.37ef9",
+        "type": "http in",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "url": "/iot-data",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "c858bd92c60ac0ac"
+            ]
+        ]
+    },
+    {
+        "id": "4e8237da.b17dc8",
+        "type": "template",
+        "z": "fcabaea46c0a3fd7",
+        "name": "page",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{   \"distance\": \"{{payload.distance}}\",\n    \"ldr_count\": \"{{payload.ldr_count}}\",\n    \"pot\" : \"{{payload.pot}}\" \n}",
+        "output": "str",
+        "x": 470,
+        "y": 600,
+        "wires": [
+            [
+                "65401623.9abfe8"
+            ]
+        ]
+    },
+    {
+        "id": "65401623.9abfe8",
+        "type": "change",
+        "z": "fcabaea46c0a3fd7",
+        "name": "Set Headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{}",
+                "tot": "json"
+            },
+            {
+                "t": "set",
+                "p": "headers.content-type",
+                "pt": "msg",
+                "to": "application/json",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 630,
+        "y": 600,
+        "wires": [
+            [
+                "f7d3e35a.082c2"
+            ]
+        ]
+    },
+    {
+        "id": "f7d3e35a.082c2",
+        "type": "http response",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "c858bd92c60ac0ac",
+        "type": "function",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "func": "msg.payload = {\n    \"distance\" : flow.get(\"distance\"),\n    \"ldr_count\" : flow.get(\"ldr_count\"),\n    \"pot\" : flow.get(\"pot\"),\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"distance\", 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 600,
+        "wires": [
+            [
+                "4e8237da.b17dc8"
+            ]
+        ]
+    },
+    {
+        "id": "34ed1f49ab329bdc",
+        "type": "mqtt in",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/pot",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "b8293848e4bb5428",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 340,
+        "wires": [
+            [
+                "a582c10957269554"
+            ]
+        ]
+    },
+    {
+        "id": "dafd24aea598355a",
+        "type": "smooth",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "property": "payload",
+        "action": "mean",
+        "count": "50",
+        "round": "2",
+        "mult": "single",
+        "reduce": true,
+        "x": 540,
+        "y": 340,
+        "wires": [
+            [
+                "88d2a337e2e8d3c7",
+                "fc0d9bc5738ed29a"
+            ]
+        ]
+    },
+    {
+        "id": "a582c10957269554",
+        "type": "function",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "func": "var voltage = msg.payload;\nmsg.payload = parseInt(voltage);\n\nflow.set(\"pot\", msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"pot\", 0)",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "dafd24aea598355a"
+            ]
+        ]
+    },
+    {
+        "id": "88d2a337e2e8d3c7",
+        "type": "ui_chart",
+        "z": "fcabaea46c0a3fd7",
+        "d": true,
+        "name": "",
+        "group": "4ef88b6e3e396dcc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Potentiometer",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting for data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "30",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 800,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fc0d9bc5738ed29a",
+        "type": "ui_gauge",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "group": "4ef88b6e3e396dcc",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Potentiometer",
+        "label": "Volts",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "25",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "15",
+        "seg2": "20",
+        "className": "",
+        "x": 800,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "3c3318c7ddee052e",
+        "type": "ui_chart",
+        "z": "fcabaea46c0a3fd7",
+        "d": true,
+        "name": "",
+        "group": "f29193e8ce275940",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "Distance",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting for data",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "30",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 420,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c0a51c0302116aa0",
+        "type": "ui_slider",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "label": "Servo 1",
+        "tooltip": "",
+        "group": "11cd0ded45172c3b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "180",
+        "step": 1,
+        "className": "",
+        "x": 140,
+        "y": 720,
+        "wires": [
+            [
+                "0fbb6c1b86afdc25"
+            ]
+        ]
+    },
+    {
+        "id": "d742128a82b8935c",
+        "type": "ui_slider",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "label": "Servo 2",
+        "tooltip": "",
+        "group": "11cd0ded45172c3b",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "180",
+        "step": 1,
+        "className": "",
+        "x": 140,
+        "y": 780,
+        "wires": [
+            [
+                "bda3360ecf311ac4"
+            ]
+        ]
+    },
+    {
+        "id": "92a15d21e3f65cc6",
+        "type": "mqtt out",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/servo_1",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b8293848e4bb5428",
+        "x": 520,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "9e54266e749c244a",
+        "type": "mqtt out",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "topic": "UT_IOT/servo_2",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b8293848e4bb5428",
+        "x": 520,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "0fbb6c1b86afdc25",
+        "type": "function",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "func": "var s1 = msg.payload;\nmsg.payload = s1.toString(10);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 720,
+        "wires": [
+            [
+                "92a15d21e3f65cc6"
+            ]
+        ]
+    },
+    {
+        "id": "bda3360ecf311ac4",
+        "type": "function",
+        "z": "fcabaea46c0a3fd7",
+        "name": "",
+        "func": "var s2 = msg.payload;\nmsg.payload = s2.toString(10);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 780,
+        "wires": [
+            [
+                "9e54266e749c244a"
+            ]
+        ]
+    },
+    {
+        "id": "b8293848e4bb5428",
+        "type": "mqtt-broker",
+        "name": "Localhost",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f29193e8ce275940",
+        "type": "ui_group",
+        "name": "Distance Sensor",
+        "tab": "77496e0f734f5c3a",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "330a059e1c1d99c8",
+        "type": "ui_group",
+        "name": "LED Control",
+        "tab": "77496e0f734f5c3a",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "138f9ea7c15d11a4",
+        "type": "ui_group",
+        "name": "LDR Count",
+        "tab": "77496e0f734f5c3a",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4ef88b6e3e396dcc",
+        "type": "ui_group",
+        "name": "Potentiometer",
+        "tab": "77496e0f734f5c3a",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "11cd0ded45172c3b",
+        "type": "ui_group",
+        "name": "Servo Control",
+        "tab": "77496e0f734f5c3a",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "77496e0f734f5c3a",
+        "type": "ui_tab",
+        "name": "Esp8266_1",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
